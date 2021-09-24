@@ -87,6 +87,12 @@ defmodule Bento do
       |> Poison.Decode.decode(options)
   end
 
+  @spec decode_some(iodata, Keyword.t) :: {:ok, Parser.t, iodata} | {:error, :invalid} | {:error, {:invalid, String.t}}
+  def decode_some(iodata, options \\ []) do
+    with {:ok, parsed, rest} <- Parser.parse_some(iodata),
+    do: {:ok, Poison.Decode.decode(parsed, options), rest}
+  end
+
   @doc """
   Like `decode`, but ensures the data is a valid torrent metainfo file.
   """
