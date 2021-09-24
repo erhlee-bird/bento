@@ -55,6 +55,20 @@ defmodule Bento.Parser do
     end
   end
 
+  @doc """
+  Provide a function to return partial parse results.
+  """
+  @spec parse_some(iodata) :: {:ok, t, iodata} | {:error, :invalid}
+    | {:error, {:invalid, String.t}}
+  def parse_some(iodata) do
+    iodata |> IO.iodata_to_binary() |> parse_value()
+  catch
+    :invalid ->
+      {:error, :invalid}
+    {:invalid, token} ->
+      {:error, {:invalid, token}}
+  end
+
   # Bencode entry points
   defp parse_value("d" <> rest), do: map_pairs(rest, [])
   defp parse_value("l" <> rest), do: list_values(rest, [])
