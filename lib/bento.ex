@@ -87,6 +87,15 @@ defmodule Bento do
       |> Poison.Decode.decode(options)
   end
 
+  @doc """
+  Decode bencoded data to a value. Providing the remaining iodata as well.
+
+      iex> Bento.decode_some("li1e3:twoli3eee")
+      {:ok, [1, "two", [3]], ""}
+
+      iex> Bento.decode_some("li1e3:twoli3eeefoo")
+      {:ok, [1, "two", [3]], "foo"}
+  """
   @spec decode_some(iodata, Keyword.t) :: {:ok, Parser.t, iodata} | {:error, :invalid} | {:error, {:invalid, String.t}}
   def decode_some(iodata, options \\ []) do
     with {:ok, parsed, rest} <- Parser.parse_some(iodata),
